@@ -1,3 +1,9 @@
+const {v4} = require('uuid');
+const data = require('./data');
+const messages = data.messages;
+const users = data.users;
+
+
 const resolvers = {
     Query: {
         me: (parent, args, {me}) => {return me;},

@@ -1,4 +1,7 @@
 const { gql } = require("apollo-server-express");
+const data = require('./data');
+const messages = data.messages;
+const users = data.users;
 
 const typeDefs = gql`
     type Query{
