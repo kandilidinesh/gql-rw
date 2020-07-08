@@ -1,15 +1,30 @@
 const express = require('express');
 const {ApolloServer, gql} = require('apollo-server-express');
+const cors = require('cors');
+require('dotenv').config();
+const {v4} = require('uuid');
 
-const typeDefs = require('./schema');
-const resolvers = require('./resolvers')
-const data = require('./data');
-const messages = data.messages;
-const users = data.users;
+const pool = require("./db");
+const schema = require('./schema/index');
+const resolvers = require('./resolvers/index');
+const models = require('./models/index');
+
+const messages = models.messages;
+const users = models.users;
+
 const app = express();
 
-const server = new ApolloServer({typeDefs, resolvers, context: {me: users[1]}});
+app.use(cors());
 
+// const server = new ApolloServer({typeDefs:schema, resolvers, context: {me: users[1]}});
+const server = new ApolloServer({typeDefs:schema, resolvers, context:({request}) => ({
+    request,
+    pool,
+    me: users[1],
+    messages,
+    users, 
+    v4
+})});
 server.applyMiddleware({ app, path: '/graphql' });
 
 app.listen({port: 8000}, () => {
