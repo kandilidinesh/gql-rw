@@ -6,13 +6,17 @@ const messageDefs = gql`
         message(id:ID!): Message!
     }
 
+    type UsrObj{
+        id: ID!
+        username: String!
+    }
     type Message{
         id: ID!
         text: String!
-        user: User!
+        user: UsrObj
     }
 
-    extend type Mutation{
+   extend type Mutation{
         createMessage(text: String!): Message!
         deleteMessage(id: ID!): Boolean!
         updateMessage(id: ID!, text: String!): Boolean!

@@ -1,10 +1,25 @@
 const messageResolvers = {
     Query: {
-        messages: (parent, args, {messages, users}) => {
-            return Object.values(messages);
+        messages: async (parent, args, {pool, messages}) => {
+            // return Object.values(messages);
+
         },
-        message: (parent, {id}) =>  {
-            return messages[id];
+        message: async (parent, {id}, {messages,pool}) =>  {
+            // return messages[id];
+            const res = await pool.query(`select * from usr us, msg ms where us.user_id=ms.user_id AND ms.msg_id=${id}`);
+            let details = {}
+            res.rows.map(data => {
+                details={
+                    id:data.msg_id,
+                    text:data.msg,
+                    user:{
+                        id:data.user_id,
+                        username:data.uname
+                    }
+                }
+            });
+            console.log(details);
+            return details;
         }
     },
     Mutation:{
